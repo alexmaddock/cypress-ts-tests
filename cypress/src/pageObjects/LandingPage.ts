@@ -30,12 +30,16 @@ class LandingPage {
                 
                 for(let i = 0; i < namesList.length; i++) {
                     expect(items).to.contain(namesList[i]);
-                }
-
-                
-            })
-
+                }   
+            });
         }
+    }
+
+    searchProduct(item: string) {
+        cy.get('#search').type(`${item}{enter}`).then((term) => {
+            cy.wrap(term).invoke('val').as('search_term');
+            cy.log('@search_term');
+        });
         
     }
 

@@ -1,16 +1,17 @@
 /// <reference types="cypress" />
 import LandingPage from '../../src/pageObjects/LandingPage';
+import CataloguePage from '../../src/pageObjects/CataloguePage';
 
 // const landingPage = new LandingPage();
 
 describe('example to-do app', () => {
-    beforeEach(() => {
-      // cy.visit('https://magento.softwaretestingboard.com');
-
-    })
+    // beforeEach(() => {
+    // })
   
     it('MAGENTO TEST', () => {
       LandingPage.visit({verifyPage: true})
+      LandingPage.searchProduct('duffle bag');
+      CataloguePage.selectProduct();
     })
   
     it.skip('SAUCE DEMO TEST', () => {
