@@ -4,7 +4,7 @@ type Options = {
 } 
 
 class LandingPage {
-    baseUrl: string;
+    // baseUrl: string;
 
     visit({baseUrl = 'https://magento.softwaretestingboard.com/', verifyPage = false}: Options) {
 
@@ -36,10 +36,13 @@ class LandingPage {
     }
 
     searchProduct(item: string) {
-        cy.get('#search').type(`${item}{enter}`).then((term) => {
-            cy.wrap(term).invoke('val').as('search_term');
-            cy.log('@search_term');
-        });
+        cy.get('#search').as('search_term').type(`${item}{enter}`)
+        cy.get('@search_term')
+        // .invoke('val')
+        // .then((thing) => {
+        //     let b = thing;
+        //     cy.log('SECOND ATTEMPT HERE:', thing);
+        // })
         
     }
 
