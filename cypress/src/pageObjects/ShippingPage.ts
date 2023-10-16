@@ -12,7 +12,7 @@ class ShippingPage extends CommonComponents {
     enterEmail({verifyPage = true}: Options) {
         if(verifyPage) {
             // Avoid race condition of duplicate 'Add to Cart' options on multiple pages
-            cy.url().should('contain', '/checkout/#shipping');
+            cy.url().should('contain', '/checkout/#shipping', {timeout: 10000});
             cy.contains('Shipping Address').should('be.visible');            
         }
 
@@ -49,7 +49,7 @@ class ShippingPage extends CommonComponents {
     }
 
     selectState(state: string = 'New South Wales') {
-        cy.get('select').first().select(state); //#name="region_id"
+        cy.get('select').first().select(state);
     }
 
     enterPostcode(postcode: string) {
@@ -57,7 +57,7 @@ class ShippingPage extends CommonComponents {
     }
 
     selectCountry(country: string = 'Australia') {
-        cy.get('select').last().select(country); //#name="country_id"
+        cy.get('select').last().select(country);
     }
 
     enterPhoneNumber(phoneNumber: string = '04123456789') {
@@ -66,10 +66,18 @@ class ShippingPage extends CommonComponents {
 
     clickNext({defaultShipping = true} : Options ) {
         if(defaultShipping) {
+            // The state of shipping quotes goes from visible > invisible > visible again
+            // The state of loading icon goes from invisible > visible > invisible again
+            // The 3 states are prone to flakiness if you check whichever state from one to the other
+
             // Ensure safety on country methods, force default
-            // Can possibly do safer check by checking if gt 1 and perform action
-            cy.get('#checkout-shipping-method-load').find('tr').first().click({force: true});
+            // Break up actions with alias, to overcome chain instability on DOM refresh, lost focus elems
+            // cy.get('#checkout-shipping-method-load').find('tr', {timeout: 15000}).as('table_row');
+            // cy.get('@table_row').should('be.visible', {timeout: 10000}).first().find('td > input[type="radio"]').as('radio_button')
+            // cy.get('@radio_button').should('be.visible').click({force: true});
         }
+        cy.mockShippingRates();
+        cy.wait('@mockShippingRates');
         cy.contains('Next').should('not.be.disabled').click();
     }
 }

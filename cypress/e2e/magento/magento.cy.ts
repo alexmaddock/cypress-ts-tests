@@ -33,7 +33,10 @@ describe('example to-do app', () => {
 
       ShippingPage.clickNext({});
 
+      // PaymentPage.placeOrder();
       PaymentPage.placeOrder({verifyPage: true});
+      // PaymentPage.placeOrder({});
+      
     })
   
     it.skip('SAUCE DEMO TEST', () => {

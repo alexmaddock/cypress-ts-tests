@@ -35,6 +35,35 @@ function createRandomUser(): User {
 Cypress.Commands.add('createUser', () => {
     createRandomUser;
 })
+
+Cypress.Commands.add('mockShippingRates', () => {
+    const staticResponse = [
+        {
+            "carrier_code": "flatrate",
+            "method_code": "flatrate",
+            "carrier_title": "Flat Rate",
+            "method_title": "Fixed",
+            "amount": 5,
+            "base_amount": 5,
+            "available": true,
+            "error_message": "",
+            "price_excl_tax": 5,
+            "price_incl_tax": 5
+        }
+    ]
+
+    cy.intercept(
+        {
+            hostname: 'magento.softwaretestingboard.com',
+            url: /\.\*estimate-shipping-methods/,
+        }, 
+        staticResponse)
+        .as('shipping_rates');
+})
+
+Cypress.Commands.add('mockCartQty', () => {
+    const staticResponse = {}
+})
 //
 //
 // -- This is a child command --

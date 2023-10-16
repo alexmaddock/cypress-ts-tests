@@ -8,7 +8,7 @@ export class CommonComponents {
     checkoutIcon() {
         cy.get('.action.showcart').as('shopping_cart');
 
-        cy.get('@shopping_cart').find('.counter-number').should((counterBox) => {
+        cy.get('@shopping_cart').find('.counter-number', {timeout: 15000}).should((counterBox) => {
             expect(counterBox).to.be.visible;
             expect(counterBox.text()).to.not.have.string('0');
         })

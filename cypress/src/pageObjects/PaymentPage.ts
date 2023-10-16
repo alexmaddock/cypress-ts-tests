@@ -1,13 +1,13 @@
 import { CommonComponents } from '../../src/pageObjects/CommonComponents';
 
-type Options = 
-{
-    verifyPage?: boolean
-}
+// type Options = 
+// {
+//     verifyPage?: boolean
+// }
 
 class PaymentPage extends CommonComponents {
 
-    placeOrder({verifyPage = false}: Options) {
+    placeOrder(verifyPage? : Object) {
         if(verifyPage) {
             cy.url().should('contain', '/checkout/#payment')            
         }

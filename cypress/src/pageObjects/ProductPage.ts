@@ -14,6 +14,7 @@ class ProductPage extends CommonComponents {
         }
 
         cy.contains('Add to Cart').click();
+        cy.url().should('not.contain', /\.\*.html/);
     }
 
     updateQuantity(quantity: number)
@@ -26,7 +27,10 @@ class ProductPage extends CommonComponents {
     }
 
     proceedToCheckout() {
-        cy.contains('Proceed to Checkout').should('be.visible').wait(500).click();
+        cy.contains('Proceed to Checkout').wait(500).then((button)=> {
+            expect(button).to.be.visible;
+            if(button.is(':enabled')) cy.wrap(button).click();
+        })
     }
 
 }

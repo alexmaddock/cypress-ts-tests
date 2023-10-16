@@ -2,7 +2,7 @@
   "name": "cypress-ts-tests",
   "version": "1.0.0",
   "description": "cypress test suite using typescript",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "cypress open",
     "test:headless": "cypress run --browser=chrome",
