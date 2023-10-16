@@ -7,17 +7,24 @@ export class CommonComponents {
     checkoutIcon() {
         cy.get('.action.showcart').as('shopping_cart');
 
-        cy.get('@shopping_cart').then((cart) => {
-            cy.wait(5000)
-            let itemNumber = cart.find('.counter.qty').text();
-            cy.log(itemNumber);
-            this.cartItemIndexTracker =+ itemNumber
-
-            // if(this.cartItemIndexTracker < 1 || this.cartItemIndexTracker == undefined) {
-            //     throw new Error;
-            // }
-            expect(itemNumber).contains(this.cartItemIndexTracker/*.toString()*/);
-        });
+        cy.get('@shopping_cart').find('.counter-number').should((counterBox) => {
+            expect(counterBox).to.be.visible;
+            expect(counterBox.text()).to.not.have.string('0');
+        })
+        .then(
+            (cart) => {
+                let itemNumber = cart.text();
+                cy.log('What is my number of items:', itemNumber);
+                this.cartItemIndexTracker =+ itemNumber
+                cy.log('Counter tracker updated to:', this.cartItemIndexTracker)
+            
+                expect(itemNumber).contains(this.cartItemIndexTracker/*.toString()*/);
+            },
+            (rej) => {
+                if(this.cartItemIndexTracker < 1 || this.cartItemIndexTracker == undefined) {
+                    throw rej;
+                }
+            });
 
         cy.get('@shopping_cart').click();
     }

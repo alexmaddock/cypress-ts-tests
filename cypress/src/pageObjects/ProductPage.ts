@@ -9,7 +9,7 @@ class ProductPage extends CommonComponents {
 
     addToCart({verifyPage = false}: Options) {
         if(verifyPage) {
-            // Avoid race condition of duplicate add to cart options on multiple pages
+            // Avoid race condition of duplicate 'Add to Cart' options on multiple pages
             cy.url().should('not.contain', 'catalogsearch/result')            
         }
 

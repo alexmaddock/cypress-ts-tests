@@ -36,14 +36,8 @@ class LandingPage {
     }
 
     searchProduct(item: string) {
-        cy.get('#search').as('search_term').type(`${item}{enter}`)
-        cy.get('@search_term')
-        // .invoke('val')
-        // .then((thing) => {
-        //     let b = thing;
-        //     cy.log('SECOND ATTEMPT HERE:', thing);
-        // })
-        
+        cy.get('#search').should('not.be.disabled').as('search_term')
+        .type('{selectAll}{backspace}').type(`${item}{enter}`)
     }
 
 }
