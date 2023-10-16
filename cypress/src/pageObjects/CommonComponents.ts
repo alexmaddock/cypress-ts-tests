@@ -3,6 +3,7 @@ export class CommonComponents {
 
     shoppingCartIcon: string
     cartItemIndexTracker: number = 0
+    priceTracker: number
 
     checkoutIcon() {
         cy.get('.action.showcart').as('shopping_cart');
@@ -17,7 +18,7 @@ export class CommonComponents {
                 cy.log('What is my number of items:', itemNumber);
                 this.cartItemIndexTracker =+ itemNumber
                 cy.log('Counter tracker updated to:', this.cartItemIndexTracker)
-            
+
                 expect(itemNumber).contains(this.cartItemIndexTracker/*.toString()*/);
             },
             (rej) => {

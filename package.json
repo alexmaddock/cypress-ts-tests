@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/alexmaddock/cypress-ts-tests#readme",
   "devDependencies": {
+    "@faker-js/faker": "^8.2.0",
     "cypress": "^12.0.0",
     "typescript": "^5.2.2"
   }

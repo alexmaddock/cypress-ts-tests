@@ -25,6 +25,10 @@ class ProductPage extends CommonComponents {
         this.checkoutIcon();
     }
 
+    proceedToCheckout() {
+        cy.contains('Proceed to Checkout').should('be.visible').wait(500).click();
+    }
+
 }
 
 export default new ProductPage();
