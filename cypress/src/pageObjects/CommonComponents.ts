@@ -5,8 +5,11 @@ export class CommonComponents {
     cartItemIndexTracker: number = 0
     priceTracker: number
 
-    checkoutIcon() {
+    checkoutIcon(options?: {mockIcons: boolean}) {
         cy.get('.action.showcart').as('shopping_cart');
+
+        cy.mockCartQty();
+        // cy.wait('@mockCartQty', {timeout: 20000});
 
         cy.get('@shopping_cart').find('.counter-number', {timeout: 15000}).should((counterBox) => {
             expect(counterBox).to.be.visible;

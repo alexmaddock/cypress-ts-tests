@@ -10,6 +10,12 @@
 // ***********************************************
 //
 import { faker } from '@faker-js/faker';
+import * as mockCartData from "../fixtures/cart.json";
+// import file from "../fixtures/cart.json" assert {type: "json"};
+
+// const module = await import("../fixtures/cart.json", {
+//     assert: { type: "json" },
+//   });
 
 type User = {
     userId: string;
@@ -55,14 +61,28 @@ Cypress.Commands.add('mockShippingRates', () => {
     cy.intercept(
         {
             hostname: 'magento.softwaretestingboard.com',
-            url: /\.\*estimate-shipping-methods/,
+            // url: /\.\*estimate-shipping-methods/,
+            url: '**estimate-shipping-methods'
         }, 
         staticResponse)
-        .as('shipping_rates');
+        .as('mockShippingRates');
 })
 
 Cypress.Commands.add('mockCartQty', () => {
-    const staticResponse = {}
+    const number = faker.number.int({ min: 10, max: 10 })
+    const staticResponse = mockCartData;
+    staticResponse.cart.data_id = number;
+    cy.log('Mock cart data_id populated with:', staticResponse.cart.data_id);
+
+    cy.intercept(
+        {
+            // hostname: 'magento.softwaretestingboard.com',
+            // url: '**customer/section/load/',
+            url: 'https://magento.softwaretestingboard.com/customer/section/load/',
+            query: { q: 'sections**' }
+        }, 
+        staticResponse)
+        .as('mockCartQty');
 })
 //
 //

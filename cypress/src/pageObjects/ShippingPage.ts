@@ -12,7 +12,7 @@ class ShippingPage extends CommonComponents {
     enterEmail({verifyPage = true}: Options) {
         if(verifyPage) {
             // Avoid race condition of duplicate 'Add to Cart' options on multiple pages
-            cy.url().should('contain', '/checkout/#shipping', {timeout: 10000});
+            cy.url().should('contain', '/checkout/#shipping', {timeout: 15000});
             cy.contains('Shipping Address').should('be.visible');            
         }
 
@@ -77,7 +77,7 @@ class ShippingPage extends CommonComponents {
             // cy.get('@radio_button').should('be.visible').click({force: true});
         }
         cy.mockShippingRates();
-        cy.wait('@mockShippingRates');
+        cy.wait('@mockShippingRates', {timeout: 10000});
         cy.contains('Next').should('not.be.disabled').click();
     }
 }
