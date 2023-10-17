@@ -12,8 +12,8 @@ class CataloguePage extends CommonComponents {
         }
     }
 
-    clickCheckoutIcon(): void {
-        this.clickCheckoutIcon();
+    clickCheckoutIcon(options?: {mockIcons: boolean}): void {
+        this.checkoutIcon(options?.mockIcons);
     }
 
 }

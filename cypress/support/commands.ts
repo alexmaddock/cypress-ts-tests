@@ -69,7 +69,7 @@ Cypress.Commands.add('mockShippingRates', () => {
 })
 
 Cypress.Commands.add('mockCartQty', () => {
-    const number = faker.number.int({ min: 10, max: 10 })
+    const number = faker.number.int({ min: 1000000000, max: 1999999999 })
     const staticResponse = mockCartData;
     staticResponse.cart.data_id = number;
     cy.log('Mock cart data_id populated with:', staticResponse.cart.data_id);

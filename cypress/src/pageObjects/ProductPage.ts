@@ -22,8 +22,8 @@ class ProductPage extends CommonComponents {
        
     }
 
-    clickCheckoutIcon(): void {
-        this.checkoutIcon();
+    clickCheckoutIcon(options?: {mockIcons: boolean}): void {
+        this.checkoutIcon(options?.mockIcons);
     }
 
     proceedToCheckout() {

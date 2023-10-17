@@ -16,7 +16,7 @@ describe('example to-do app', () => {
       LandingPage.searchProduct('duffle bag');
       CataloguePage.selectProduct();
       ProductPage.addToCart({verifyPage: true});
-      ProductPage.clickCheckoutIcon();
+      ProductPage.clickCheckoutIcon({mockIcons: true});
       ProductPage.proceedToCheckout();
 
       ShippingPage.enterEmail({verifyPage: true})
