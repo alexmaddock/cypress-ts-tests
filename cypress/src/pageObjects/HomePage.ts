@@ -1,16 +1,36 @@
 type Options = {
     baseUrl?: string;
-    verifyPage?: boolean
+    verifyPageElems?: boolean
+    stubElements?: boolean
 } 
 
-export class LandingPage {
+export class HomePage {
     // baseUrl: string;
 
-    visit({baseUrl = 'https://magento.softwaretestingboard.com/', verifyPage = false}: Options) {
+    visit({baseUrl = 'https://magento.softwaretestingboard.com/', verifyPageElems = false, stubElements = false}: Options) {
 
         cy.visit(baseUrl);
 
-        if(verifyPage) {
+        if(stubElements) {
+
+            const menuList = {
+                lists() {
+                    return {
+                        new: 'What\'s New',
+                        women: 'Women',
+                        men: 'Men',
+                        gear: 'Gear',
+                        training: 'Training',
+                        sale: 'Sale'
+                    }
+                }
+            }
+
+            // const stub = cy.stub(menuList, 'lists').as('lists');
+            // menuList.lists('new', )
+        }
+
+        if(verifyPageElems) {
             cy.get('header').should((header) => {
                 let searchBarValue = header.val;
                 let miniCart = header.find('.minicart-wrapper');
@@ -26,7 +46,7 @@ export class LandingPage {
             });
 
             cy.get('#store\\.menu').should((items) => {
-                let namesList = ["What's New", "Women", "Men", "Gear", "Training", "Sale"];
+                const namesList = ["What's New", "Women", "Men", "Gear", "Training", "Sale"];
                 
                 for(let i = 0; i < namesList.length; i++) {
                     expect(items).to.contain(namesList[i]);
@@ -47,4 +67,4 @@ export class LandingPage {
 
 }
 
-// export default new LandingPage();
+// export default new HomePage();

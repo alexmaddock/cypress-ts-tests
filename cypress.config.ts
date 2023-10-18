@@ -8,4 +8,11 @@ export default defineConfig({
     defaultCommandTimeout: 10000,
     projectId: "73wtvy"
   },
+  env: {
+    "username": "Haleigh Kiehn",
+    "email": "haleigh43@ethereal.email",
+    "password": "VSGtwQvKBB1pGgzgPP",
+    "host": "https://magento.softwaretestingboard.com",
+    "ethereal_mail": "https://ethereal.email/login"
+  }
 });

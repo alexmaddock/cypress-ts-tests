@@ -1,27 +1,28 @@
 import { CommonComponents } from "./CommonComponents";
 
 export class LoginPage extends CommonComponents {
-    protected username: string;
+    protected email: string;
     protected password: string;
+    protected username: string;
 
-    enterUsername(username: string = Cypress.env('USERNAME')) {
-        cy.get('#email').type(username);
-        this.username = username;
+    enterEmail(email: string = Cypress.env('email')) {
+        cy.get('#email').type(email);
+        this.username = Cypress.env('username');
     }
 
-    enterPassword(password: string = Cypress.env('PASSWORD')) {
+    enterPassword(password: string = Cypress.env('password')) {
         cy.get('#pass').type(password)
         this.password = password;
     }
 
     clickSignIn() {
-        cy.contains('Sign In').click();
+        cy.get('button').contains('Sign In').click();
         cy.get('.logged-in').should('contain', `Welcome, ${this.username}!`);
     }
 
     clickAccountDropdown(options?: {verifyDropdownElems: boolean}) {
-        cy.get('.customer-welcome').click();
-        cy.get('.customer-menu').should('be.visible').and('have.attr', 'aria-hidden', 'false').as('dropdown');
+        cy.get('.panel.wrapper').find('.customer-welcome').click();
+        cy.get('.customer-menu').and('have.attr', 'aria-hidden', 'false').find('ul').should('be.visible').as('dropdown');
 
         if(options.verifyDropdownElems) {
             cy.get('@dropdown').should((items) => {
