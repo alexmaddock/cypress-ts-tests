@@ -34,4 +34,8 @@ export class CommonComponents {
 
         cy.get('@shopping_cart').click();
     }
+
+    accountBanner() {
+        
+    }
 }

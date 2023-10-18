@@ -3,7 +3,7 @@ type Options = {
     verifyPage?: boolean
 } 
 
-class LandingPage {
+export class LandingPage {
     // baseUrl: string;
 
     visit({baseUrl = 'https://magento.softwaretestingboard.com/', verifyPage = false}: Options) {
@@ -35,6 +35,11 @@ class LandingPage {
         }
     }
 
+    clickLogin() {
+        cy.contains('Sign In').click();
+        cy.contains('Customer Login').should('be.visible');
+    }
+
     searchProduct(item: string) {
         cy.get('#search').should('not.be.disabled').as('search_term')
         .type('{selectAll}{backspace}').type(`${item}{enter}`)
@@ -42,4 +47,4 @@ class LandingPage {
 
 }
 
-export default new LandingPage();
+// export default new LandingPage();

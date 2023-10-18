@@ -5,6 +5,7 @@ declare namespace Cypress {
         mockShippingRates(): Chainable<any>;
         createUser(): Chainable<any>;
         mockCartQty(): Chainable<any>;
+        auth(): Chainable<any>;
 
     }
   }

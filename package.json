@@ -6,7 +6,8 @@
   "scripts": {
     "test": "cypress open",
     "test:headless": "cypress run --browser=chrome",
-    "test:magento": "cypress run --browser=chrome --spec cypress/e2e/magento/magento.cy.ts"
+    "test:magento": "cypress run --browser=chrome --spec cypress/e2e/magento/magento.cy.ts",
+    "test:parallel": "cypress run --record --parallel"
   },
   "repository": {
     "type": "git",

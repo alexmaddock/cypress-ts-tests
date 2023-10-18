@@ -5,7 +5,7 @@ type Options =
     verifyPage?: boolean
 }
 
-class ProductPage extends CommonComponents {
+export class ProductPage extends CommonComponents {
 
     addToCart({verifyPage = false}: Options) {
         if(verifyPage) {
@@ -35,4 +35,4 @@ class ProductPage extends CommonComponents {
 
 }
 
-export default new ProductPage();
+// export default new ProductPage();

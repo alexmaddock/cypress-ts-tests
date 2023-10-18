@@ -5,7 +5,7 @@ import { CommonComponents } from '../../src/pageObjects/CommonComponents';
 //     verifyPage?: boolean
 // }
 
-class PaymentPage extends CommonComponents {
+export class PaymentPage extends CommonComponents {
 
     placeOrder(verifyPage? : Object) {
         if(verifyPage) {
@@ -23,4 +23,4 @@ class PaymentPage extends CommonComponents {
 
 }
 
-export default new PaymentPage();
+// export default new PaymentPage();

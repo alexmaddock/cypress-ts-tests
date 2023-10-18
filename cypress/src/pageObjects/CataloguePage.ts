@@ -1,6 +1,6 @@
 import { CommonComponents } from '../../src/pageObjects/CommonComponents';
 
-class CataloguePage extends CommonComponents {
+export class CataloguePage extends CommonComponents {
 
     selectProduct(refreshPage: boolean = false) {
         cy.get('.products.list.items.product-items').as('product_lists').should('be.visible');
@@ -18,4 +18,4 @@ class CataloguePage extends CommonComponents {
 
 }
 
-export default new CataloguePage();
+// export default new CataloguePage();

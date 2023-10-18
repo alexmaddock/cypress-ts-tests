@@ -11,11 +11,7 @@
 //
 import { faker } from '@faker-js/faker';
 import * as mockCartData from "../fixtures/cart.json";
-// import file from "../fixtures/cart.json" assert {type: "json"};
-
-// const module = await import("../fixtures/cart.json", {
-//     assert: { type: "json" },
-//   });
+import request from 'request'; 
 
 type User = {
     userId: string;
@@ -83,12 +79,23 @@ Cypress.Commands.add('mockCartQty', () => {
         }, 
         staticResponse)
         .as('mockCartQty');
+});
+
+Cypress.Commands.add('auth', () => {
+    cy.request({
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        url: `${Cypress.env('HOST')}/rest/V1/tfa/provider/google/authenticate`,
+        body: JSON.stringify({
+            "username": "<admin-username>",
+            "password": "<admin-password>",
+            "otp": "<6 digit otp code>"
+          })
+      })
 })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
+
 //
 // -- This is a dual command --
 // Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })

@@ -1,49 +1,60 @@
 /// <reference types="cypress" />
-import LandingPage from '../../src/pageObjects/LandingPage';
-import CataloguePage from '../../src/pageObjects/CataloguePage';
-import ProductPage from '../../src/pageObjects/ProductPage';
-import ShippingPage from '../../src/pageObjects/ShippingPage';
-import PaymentPage from '../../src/pageObjects/PaymentPage';
+import { LandingPage } from '../../src/pageObjects/LandingPage';
+import { CataloguePage } from '../../src/pageObjects/CataloguePage';
+import { ProductPage } from '../../src/pageObjects/ProductPage';
+import { ShippingPage } from '../../src/pageObjects/ShippingPage';
+import { PaymentPage } from '../../src/pageObjects/PaymentPage';
+import { LoginPage } from '../../src/pageObjects/LoginPage';
 
-// const landingPage = new LandingPage();
+describe('Magento Tests', () => {
+    let landingPage;
+    let cataloguePage;
+    let productPage;
+    let shippingPage;
+    let paymentPage;
+    let loginPage;
 
-describe('example to-do app', () => {
-    // beforeEach(() => {
-    // })
+    beforeEach(() => {
+      landingPage = new LandingPage();
+      cataloguePage = new CataloguePage();
+      productPage = new ProductPage();
+      shippingPage = new ShippingPage();
+      paymentPage = new PaymentPage();
+      loginPage = new LoginPage();
+    });
   
-    it.only('MAGENTO TEST', () => {
-      LandingPage.visit({verifyPage: true})
-      LandingPage.searchProduct('duffle bag');
-      CataloguePage.selectProduct();
-      ProductPage.addToCart({verifyPage: true});
-      ProductPage.clickCheckoutIcon({mockIcons: true});
-      ProductPage.proceedToCheckout();
+    it('User can create shipment for a product', () => {
+      landingPage.visit({verifyPage: true})
+      landingPage.searchProduct('duffle bag');
+      cataloguePage.selectProduct();
+      productPage.addToCart({verifyPage: true});
+      productPage.clickCheckoutIcon({mockIcons: true});
+      productPage.proceedToCheckout();
 
-      ShippingPage.enterEmail({verifyPage: true})
-      ShippingPage.enterFirstName();
-      ShippingPage.enterLastName();
-      ShippingPage.enterCompany();
-      ShippingPage.enterStreetAddressOne();
-      ShippingPage.enterStreetAddressTwo();
-      ShippingPage.enterCity();
-      ShippingPage.selectCountry('Australia');
-      ShippingPage.selectState('New South Wales');
-      ShippingPage.enterPostcode('2000');
-      ShippingPage.enterPhoneNumber();
+      shippingPage.enterEmail({verifyPage: true})
+      shippingPage.enterFirstName();
+      shippingPage.enterLastName();
+      shippingPage.enterCompany();
+      shippingPage.enterStreetAddressOne();
+      shippingPage.enterStreetAddressTwo();
+      shippingPage.enterCity();
+      shippingPage.selectCountry('Australia');
+      shippingPage.selectState('New South Wales');
+      shippingPage.enterPostcode('2000');
+      shippingPage.enterPhoneNumber();
 
-      ShippingPage.clickNext({});
-
-      // PaymentPage.placeOrder();
-      PaymentPage.placeOrder({verifyPage: true});
-      // PaymentPage.placeOrder({});
-      
-    })
+      shippingPage.clickNext({});
+      paymentPage.placeOrder({verifyPage: true});
+    });
   
-    it.skip('SAUCE DEMO TEST', () => {
-      LandingPage.visit({baseUrl: 'https://www.saucedemo.com/'});
-
-
-    })
+    it.only('User can login', () => {
+      landingPage.visit({verifyPage: true});
+      landingPage.clickLogin();
+      loginPage.enterUsername();
+      loginPage.enterPassword();
+      loginPage.click('Sign In');
+      loginPage.clickAccountDropdown({verifyDropdownElems: true});
+    });
 
   })
   

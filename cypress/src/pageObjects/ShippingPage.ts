@@ -7,7 +7,7 @@ type Options =
     defaultShipping? : boolean
 }
 
-class ShippingPage extends CommonComponents {
+export class ShippingPage extends CommonComponents {
 
     enterEmail({verifyPage = true}: Options) {
         if(verifyPage) {
@@ -82,4 +82,4 @@ class ShippingPage extends CommonComponents {
     }
 }
 
-export default new ShippingPage();
+// export default new ShippingPage();
