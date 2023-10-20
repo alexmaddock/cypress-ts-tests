@@ -39,4 +39,4 @@ export class LoginPage extends CommonComponents {
 
 }
 
-// export default new LandingPage();
+// export default new LoginPage();

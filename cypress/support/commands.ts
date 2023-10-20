@@ -57,7 +57,6 @@ Cypress.Commands.add('mockShippingRates', () => {
     cy.intercept(
         {
             hostname: 'magento.softwaretestingboard.com',
-            // url: /\.\*estimate-shipping-methods/,
             url: '**estimate-shipping-methods'
         }, 
         staticResponse)
@@ -72,8 +71,6 @@ Cypress.Commands.add('mockCartQty', () => {
 
     cy.intercept(
         {
-            // hostname: 'magento.softwaretestingboard.com',
-            // url: '**customer/section/load/',
             url: 'https://magento.softwaretestingboard.com/customer/section/load/',
             query: { q: 'sections**' }
         }, 
@@ -84,33 +81,57 @@ Cypress.Commands.add('mockCartQty', () => {
 Cypress.Commands.add('auth', () => {
     cy.request({
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        url: `${Cypress.env('HOST')}/rest/V1/tfa/provider/google/authenticate`,
-        body: JSON.stringify({
-            "username": "<admin-username>",
-            "password": "<admin-password>",
-            "otp": "<6 digit otp code>"
-          })
-      })
+        url: `${Cypress.env('host')}/rest/V1/integration/customer/token`,
+        body: {
+            username:`${Cypress.env('email')}`,
+            password:`${Cypress.env('password')}`
+        }
+    })
+    .then((body) => {
+        console.log(body);
+    })
 })
 
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+Cypress.Commands.add('authSession', () => {
+    // cy.session('username', () => {
+        cy.request({
+          method: 'POST',
+          url: `${Cypress.env('host')}/rest/V1/integration/customer/token`,
+          body: {"username":`${Cypress.env('email')}`, "password":`${Cypress.env('password')}`},
+        })
+        .then((body) => {
+            // cy.log("WAHT IS THIS:", body.allRequestResponses)
+            console.log(body)
+
+            cy.request({
+                method: 'GET',
+                headers: { Authorization: `Bearer 1tc4r70cwlgwhhx25k9ip73pdtywrji0`},
+                url: `${Cypress.env('host')}/rest/default/V1/customers/me`//,
+                // body: {"username":`${Cypress.env('email')}`, "password":`${Cypress.env('password')}`},
+            }).then((resp) => { console.log(resp)})
+        //   window.localStorage.setItem('authToken', body.token)
+        })
+    //   })
+})
+
+Cypress.Commands.add('getDOM', () => {
+        cy.request({
+          method: 'GET',
+          url: `${Cypress.env('host')}`
+        })
+        .then((body) => {
+            console.log(body)
+        })
+})
+
+// Cypress.Commands.add('loginViaApi', () => {
+//     return cy.authSession().then((result) => {
+//         return cy.window().then(() => {
+//             cy.setCookie('bearerAuth', result);
+//             // cy.session('name', )
+//         }).then(() => {
+//             cy.log('Fixtures are created. Visiting site...');
+//             cy.visit(Cypress.env('host'))
+//         });
+//     });
+//  });

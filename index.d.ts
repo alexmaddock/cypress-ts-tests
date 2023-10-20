@@ -6,6 +6,9 @@ declare namespace Cypress {
         createUser(): Chainable<any>;
         mockCartQty(): Chainable<any>;
         auth(): Chainable<any>;
+        authSession(): Chainable<any>;
+        loginViaApi(): Chainable<any>;
+        getDOM(): Chainable<any>;
 
     }
   }

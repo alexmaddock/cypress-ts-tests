@@ -1,3 +1,37 @@
+# Introduction
+
+This project uses Cypress version 12. It is written in Typescript, using the Page Object Model via Classes paradigm.
+
+Some notes about this structure.
+
+1. Cypress does not encourage or advocate the use of POM. While not impossible to achieve, the design, promise resolve mechanism and variable assignment, lends itself well to just writing straight Cypress actions into your test handlers.
+[Start Using App Actions](https://www.cypress.io/blog/2019/01/03/stop-using-page-objects-and-start-using-app-actions#page-objects-problems)
+[Can I User The Page Object Pattern](https://docs.cypress.io/faq/questions/using-cypress-faq#Can-I-use-the-Page-Object-pattern)
+
+2. Cypress uses the mocha implementation as a test runner, and so scaling of test suites is strictly limited to CI runner splitting tests on a per file basis. Within a file however, tests run sequentially. This means instances of a page `let page = new Page()` should not conflict data wise.
+
+3. Alias'ing `@` is the way to pass values around in Cypress, instead of using `const, let, var` and avoiding the use of `return` statements; the use of these keywords is generally reserved for within a callback function like `then((a) => let b = a.text)`
+
+4. Alternatives for sharing state could be explored through the use of Class fields and resetting them after test runs. This method has not be tried or implemented yet. To be explored.
+
+5. A factory class / wrapper may be developed that newly instantiates all classes in a beforeEach hook. Note however it appears state is not shared between **beforeEach()** into the **test()** functions. The use of *this* keyword appears to be the solution to sharing state
+
+
+## Project Setup
+
+Tests are stored within
+
+`/cypress/e2e/magento`
+
+Page Objects are found in
+
+`/cypress/src/pageObjects`
+
+Extending Cypress object **cy.addFunction()** with custom commands is found in
+
+`/cypress/support/commands.ts`
+
+
 ### Cypress Version
 Cypress version updated from version 12.0.0. to 12.1.0 due to `cy.getAllCookies` failing. Bug was fixed as per [ticket](https://github.com/cypress-io/cypress/issues/8956)
 
@@ -9,9 +43,9 @@ Answer the following Questions by adding in your Response next to the word “An
 
 S1: You have a suite of Cypress tests that take a considerable amount of time to run sequentially. The goal is to reduce the overall test execution time by leveraging parallel execution. 
 
-What considerations would you keep in mind regarding test dependencies, resource allocation, and reporting? 
+What considerations would you keep in mind regarding test dependencies, resource allocation, and reporting? Answer: 
 
-Answer: It depends on the test runner in question. In terms of 
+It depends on the test runner in question. In terms of 
 
 How would you ensure the stability and reliability of the tests when running them in parallel? 
 
@@ -55,6 +89,38 @@ these are often promise based function calls, and so help to wait for some logic
 
 2. forcing the system state with API calls or seeding the DB. This ensures the test data you require is available before reaching the test logic in question.
 
+Below is an example of an antipattern I once employed as part of my state management for front end tests. This pattern worked in Cypress using CircleCI but not in Testcafe on Gitlab due to the combination of the **test tool and CI** memory management.
+
+```JS
+
+let token = null;
+
+const apiClient = {
+
+    get: async() => {
+
+        try{
+            if(token === null || token === undefined) {
+                console.log('token not detected, setting token')
+                let token = await authenticate();
+                jwt = token;
+            }
+    
+            // ...code here
+
+        }
+    }
+
+    // ... post: () => {}
+    // ... put: () => {}
+    // ... delete: () => {}
+}
+
+```
+
+The above code when run in parallel through a test tool like Testcafe, will share that single state of **token**, and as one test updates that record, it will wipe the previous states token away, causing authentication errors on a network call.
+
+
 What specific techniques or strategies would you employ to identify anti-patterns? Answer:
 
 If doing code reviews I can generally see before a merge when an antipattern is emerging. If I'm not the funnel that stops code merges, then I would employ code scans potentially and have them check the number of wait statements employed, check perhaps conditional statements, although this can be harder, due to if-else being keywords in a language, rather than a test tools function that is uniquely named.
@@ -73,7 +139,8 @@ What steps would you take to make the tests more maintainable, independent, and 
 4. Ensuring I use unique id's to avoid sharing test state and record. Generally by using something like uuid or faker libs to generate unique records
 5. Sometimes slow test execution down by 5 / 10%. This is merely to slow drag and hover + click / type events to give the system time to resolve for race conditions
 6. Avoid using a single source of shared data in memory and updating it for other tests to use.
-
+7. For CI run I'd add a retry flag, but ensure my tests are small enough to avoid a larger than necessary doubling of test time. A 2 minute test if it failed near the end an reran would take 4 mins. A 3 min test on fail-retry could turn into 6.
+8. Avoid large scale e2e tests. Run then as smaller components and use API to handle test state creation to save on time like by creating records through click events.
 
 How would you ensure that the refactored tests still provide adequate test coverage and effectively validate the application's functionality Answer:
 
