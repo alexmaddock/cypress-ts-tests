@@ -32,9 +32,46 @@ Extending Cypress object **cy.addFunction()** with custom commands is found in
 `/cypress/support/commands.ts`
 
 
-### Cypress Version
+## Cypress Version
 Cypress version updated from version 12.0.0. to 12.1.0 due to `cy.getAllCookies` failing. Bug was fixed as per [ticket](https://github.com/cypress-io/cypress/issues/8956)
 
+## Running Tests
+
+## Structure Of Project
+
+See below how files are inherited into the POM model
+
+![CI-Project_Structure](./resources/Project-Structure.png)
+
+## CI & Parallel Considerations
+
+The considerations for how to scale tests in CI, lies in the the test tool features and the test nners capabilities. The diagram shows and compares two test tools with two CI runners.
+
+Cypress employs the use of Mocha as its test runner to leverage the inbuilt hooks and handling of it's core logic to execute and report on results. Testcafe as an example uses it's own inbuilt runner to handle its execution logic. These lead to different conclusions when it comes to testing. Refer to the diagram for the discussion.
+
+1. Scaling Flags -p / -c
+
+- Mocha has a `--parallel` flag, which distributes tests based on files, and therefore runs `it()` test functions **sequentially** in those files. This means you can share an instance and it won't pollute via race conditions.
+
+- Testcafe has the `--concurreny` flag which reads `test()` functions off a queue, and therefore is not concerned with how files are distributed. This means you cannot share test state without running the risk of suffering race conditions.
+
+2. Test State
+
+- Mocha shares values via `@` aliases. Class fields and globals are another way you can set state and override state, while safely knowing that streams won't cross and sequential test runs ensure safety in tests
+
+- Testcafe shares state via it's context option `t.ctx`, and each `test()` will use a unique test handler state behind the scenes. Therefore two `t.ctx` references will not be the same when running concurrent tests. This however does not safeguard you from assigning to global and referencing this in your context handlers
+
+3. Splitting By Jobs vs Containers
+
+- Jobs with most CI runners, will host a docker container from within, which will install all relative packages and files to execute. How you model your jobs in the pipeline is dependent on the resource volume assigned to your CI project. Refer to the diagram for the different modelling options
+
+- Hosting a single large instance with docker running that can scale X number of browsers is an option
+
+- Running multiple jobs with smaller docker instances internally is also an option. Just ensure you assign specify which files to run in each otherwise they may all run and you duplicate the work, with no benefit of scaling.
+
+- There are options to use a CI's templating to also split tests up with parallel flag that don't rely on the test tools logic. Again a decision based on team or business setup. 
+
+![CI-Pipeline](./resources/CI-Pipeline.png)
 
 ### Answers To Questions
 PART 2: 
@@ -93,6 +130,7 @@ Below is an example of an antipattern I once employed as part of my state manage
 
 ```JS
 
+// mutatable global var
 let token = null;
 
 const apiClient = {
