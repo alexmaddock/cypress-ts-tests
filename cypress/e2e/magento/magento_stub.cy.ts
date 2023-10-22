@@ -26,44 +26,36 @@ describe('Magento Tests', () => {
       loginPage = new LoginPage();
     });
 
-    it('User can create shipment for a product', () => {
-      homePage.visit({verifyPageElems: true});
-      homePage.searchProduct('duffle bag');
-      cataloguePage.selectProduct();
-      productPage.addToCart({verifyPage: true});
-      productPage.clickCheckoutIcon({mockIcons: true});
-      productPage.proceedToCheckout();
+    it.only('small element', () => {
+        const mock = `<span class="action more button">Shop New Yoga</span>`;
 
-      shippingPage.enterEmail({verifyPage: true})
-      shippingPage.enterFirstName();
-      shippingPage.enterLastName();
-      shippingPage.enterCompany();
-      shippingPage.enterStreetAddressOne();
-      shippingPage.enterStreetAddressTwo();
-      shippingPage.enterCity();
-      shippingPage.selectCountry('Australia');
-      shippingPage.selectState('New South Wales');
-      shippingPage.enterPostcode('2000');
-      shippingPage.enterPhoneNumber();
+        // cy.intercept(Cypress.env('host'), mock);
+        cy.visit(Cypress.env('host'));
+    })
 
-      shippingPage.clickNext({});
-      paymentPage.placeOrder({verifyPage: true});
-    });
+    it.skip('Stub Homepage Items', () => {
+
+        cy.visit('/');
+        
+        cy.window().then((win) => {
+            cy.stub(win, 'open').as('openNew');
+        });
+
+        // cy.get('@openNew').then((html) => {console.log('STUB WINDOW:', html)});
+
+        cy.intercept(Cypress.env('host')).as('dashboard');
   
-    it('User can login', () => {
-      homePage.visit({verifyPageElems: true});
-      homePage.clickLogin();
-      loginPage.enterEmail();
-      loginPage.enterPassword();
-      loginPage.clickSignIn();
-      loginPage.clickAccountDropdown({verifyDropdownElems: true});
-      cy.getAllLocalStorage().then((storage) => {cy.writeFile('localstorage.txt', storage)});
-      cy.getAllCookies().then((cookies) => {cy.writeFile('cookies.txt', cookies)})
-      cy.getAllSessionStorage().then((sessionStorage) => {cy.writeFile('session.txt', sessionStorage)});
-      cy.authSession();
-    });
+        cy.visit(Cypress.env('host'));
+  
+        cy.wait('@dashboard').then((interception) => {
+            cy.writeFile('intercept-req.json', interception.request);
+            cy.writeFile('intercept-res.json', interception.response);
+            cy.writeFile('intercept-id.json', interception.id);
+        });
+       
+      })
 
-    it.only('Stub Homepage Items', () => {
+    it.skip('Stub Homepage Items', () => {
       cy.intercept({
         method: 'GET',
         url: Cypress.env('host'),
@@ -73,9 +65,8 @@ describe('Magento Tests', () => {
       })
       .as('homepage_check');
 
-      cy.intercept(Cypress.env('host')).as('dashboard');
 
-      cy.visit(Cypress.env('host'));
+      cy.visit(Cypress.env('host'))
       // .then((output) => {
       //   cy.log(`${output}`);
       //   // cy.writeFile('./homePageResponse.json', output);
@@ -86,8 +77,6 @@ describe('Magento Tests', () => {
       //   // cy.log(output);
       //   cy.writeFile('./homePageResponse.json', output);
       // });
-
-      cy.wait('@dashboard').then((all) => console.log(all));
 
       cy.get('@homepage_check').then((outcome) => {
         let output = JSON.stringify(outcome);
