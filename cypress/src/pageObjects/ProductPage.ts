@@ -13,7 +13,7 @@ export class ProductPage extends CommonComponents {
             cy.url().should('not.contain', 'catalogsearch/result')            
         }
 
-        cy.contains('Add to Cart').click();
+        cy.contains('Add to Cart').should('be.enabled').click({force: true});
         cy.url().should('not.contain', /\.\*.html/);
     }
 

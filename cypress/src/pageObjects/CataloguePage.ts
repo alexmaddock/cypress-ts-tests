@@ -1,4 +1,7 @@
 import { CommonComponents } from '../../src/pageObjects/CommonComponents';
+import * as catalogueStubbedElements from '../../fixtures/catalogueElems.json';
+
+const { productItem } = catalogueStubbedElements; 
 
 export class CataloguePage extends CommonComponents {
 
@@ -9,6 +12,22 @@ export class CataloguePage extends CommonComponents {
 
         if(refreshPage) {
             cy.reload();
+        }
+    }
+
+    verifyProduct(options?: {mockProduct?: boolean}) {
+
+        if(options?.mockProduct) {
+            cy.url().should('contain', '/catalogsearch/result/');
+            cy.intercept('/catalogsearch/result/**', productItem.firstProductItem).as('product_item');
+            cy.reload();
+
+            cy.get('@product_item').then((item) => {
+                cy.log(item)
+                const mockItem = item.response.body;
+                expect(mockItem).to.contain('Duffle Bag');
+            });
+            return;
         }
     }
 

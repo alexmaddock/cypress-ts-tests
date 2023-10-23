@@ -11,7 +11,7 @@
 //
 import { faker } from '@faker-js/faker';
 import * as mockCartData from "../fixtures/cart.json";
-import request from 'request'; 
+import * as homePageMockResponse from "../../homePageResponse.json";
 
 type User = {
     userId: string;

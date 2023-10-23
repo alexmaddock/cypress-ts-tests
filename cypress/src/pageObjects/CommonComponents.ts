@@ -6,7 +6,7 @@ export class CommonComponents {
 
     checkoutIcon(mockIcons: boolean) {
         cy.get('.action.showcart').as('shopping_cart');
-        // cy.mockCartQty();
+
         if(mockIcons) { 
             cy.log("Executing Mock Cart Item Call...");
             cy.mockCartQty();

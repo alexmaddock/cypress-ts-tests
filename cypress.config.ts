@@ -6,7 +6,8 @@ export default defineConfig({
       // implement node event listeners here
     },
     defaultCommandTimeout: 10000,
-    projectId: "73wtvy"
+    projectId: "73wtvy",
+    baseUrl: 'https://magento.softwaretestingboard.com'
   },
   env: {
     "username": "Haleigh Kiehn",

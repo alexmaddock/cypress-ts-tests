@@ -20,19 +20,6 @@ export class LoginPage extends CommonComponents {
         cy.get('.logged-in').should('contain', `Welcome, ${this.username}!`);
     }
 
-    clickAccountDropdown(options?: {verifyDropdownElems: boolean}) {
-        cy.get('.panel.wrapper').find('.customer-welcome').click();
-        cy.get('.customer-menu').and('have.attr', 'aria-hidden', 'false').find('ul').should('be.visible').as('dropdown');
-
-        if(options.verifyDropdownElems) {
-            cy.get('@dropdown').should((items) => {
-                expect(items).to.contain('My Account');
-                expect(items).to.contain('My Wish List');
-                expect(items).to.contain('Sign Out');
-            });
-        }
-    }
-
     apiAuth() {
         cy.auth()
     }

@@ -1,3 +1,7 @@
+import * as homePageStubbedElements from '../../fixtures/homePageElems.json';
+
+const { items, search, header } = homePageStubbedElements;
+
 type Options = {
     baseUrl?: string;
     verifyPageElems?: boolean
@@ -7,27 +11,38 @@ type Options = {
 export class HomePage {
     // baseUrl: string;
 
-    visit({baseUrl = 'https://magento.softwaretestingboard.com/', verifyPageElems = false, stubElements = false}: Options) {
-
+    visit({baseUrl = Cypress.env('host'), verifyPageElems = false, stubElements = false}: Options) {
         cy.visit(baseUrl);
 
         if(stubElements) {
+            cy.intercept(Cypress.env('host'), items.itemsNavBar).as('dropdown_list');
+            cy.reload();
+            cy.get('@dropdown_list').should((items) => {
+                const mockDOM = items.response.body;
+                const namesList = ["What's New", "Women", "Men", "Gear", "Training", "Sale"];
+                for(let i = 0; i < namesList.length; i++) {
+                    expect(mockDOM).to.contain(namesList[i]);
+                };
+            });
 
-            const menuList = {
-                lists() {
-                    return {
-                        new: 'What\'s New',
-                        women: 'Women',
-                        men: 'Men',
-                        gear: 'Gear',
-                        training: 'Training',
-                        sale: 'Sale'
-                    }
-                }
-            }
+            cy.intercept(Cypress.env('host'), search.searchInput).as('search_input');
+            cy.reload();
+            cy.get('@search_input').should((input) => {
+                const mockInput = input.response.body;
+                expect(mockInput).to.contain('Search entire store here...');
+            });
 
-            // const stub = cy.stub(menuList, 'lists').as('lists');
-            // menuList.lists('new', )
+            cy.intercept(Cypress.env('host'), header.headerLinks).as('header_links');
+            cy.reload();
+            cy.get('@header_links').should((header) => {
+                const mockHeader = header.response.body;
+                // expect(mockHeader).to.contain(['Sign In', 'Create an Account']);
+                expect(mockHeader).to.contain('Default welcome msg!');
+                expect(mockHeader).to.contain('Sign In');
+                expect(mockHeader).to.contain('Create an Account');
+            });
+
+            return; // quick safeguard against running second conditional on double entry params
         }
 
         if(verifyPageElems) {
@@ -60,9 +75,31 @@ export class HomePage {
         cy.contains('Customer Login').should('be.visible');
     }
 
-    searchProduct(item: string) {
+    searchProduct(item: string, options?: {mockProduct?: boolean}) {
         cy.get('#search').should('not.be.disabled').as('search_term')
         .type('{selectAll}{backspace}').type(`${item}{enter}`)
+    }
+
+    clickAccountDropdown(options?: {verifyDropdownElems: boolean}) {
+        cy.get('.panel.wrapper').find('.customer-welcome').click();
+        cy.get('.customer-menu').and('have.attr', 'aria-hidden', 'false').find('ul').should('be.visible').as('dropdown');
+
+        if(options.verifyDropdownElems) {
+            cy.get('@dropdown').should((items) => {
+                expect(items).to.contain('My Account');
+                expect(items).to.contain('My Wish List');
+                expect(items).to.contain('Sign Out');
+            });
+        }
+    }
+
+    selectDropdownOption(dropDownOption: string) {
+        cy.get('.header.links').as('menu-items').should('be.visible').then(() => {
+            cy.get('@menu-items').contains(dropDownOption).click();
+        });
+
+        cy.url().should('contain', '/customer/account/');
+        cy.contains('Account Information').should('be.visible');
     }
 
 }
