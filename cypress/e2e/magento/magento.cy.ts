@@ -7,9 +7,6 @@ import { PaymentPage } from '../../src/pageObjects/PaymentPage';
 import { LoginPage } from '../../src/pageObjects/LoginPage';
 import { AccountPage } from '../../src/pageObjects/AccountPage';
 
-import * as homePageMockResponse from "../../../homePageResponse.json";
-let staticResponse = homePageMockResponse;
-
 describe('Magento Tests', () => {
     let homePage: HomePage;
     let cataloguePage: CataloguePage;
