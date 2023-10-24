@@ -7,5 +7,8 @@ workflows:
       - cypress/run:
           # start-command: 'npm run start'
           # cypress-command: 'npm run cypress run --parallel --record --group all tests'
-          cypress-command: 'npm run test:parallel'
+          cypress-command: |
+            'ls -la'
+            'mkdir ./cypress/videos ./cypress/screenshots'
+            'npm run test:parallel'
           parallelism: 2

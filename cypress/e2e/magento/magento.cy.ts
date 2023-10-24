@@ -56,7 +56,7 @@ describe('Magento Tests', () => {
       accountPage.veryifyAccountDetails();
     });
 
-    it.only('User can create shipment for a product', () => {
+    it('User can create shipment for a product', () => {
       homePage.visit({verifyPageElems: true});
       homePage.searchProduct('duffle bag');
       cataloguePage.selectProduct();
