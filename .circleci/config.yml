@@ -10,5 +10,7 @@ workflows:
           cypress-command: |
             ls -la
             mkdir ./cypress/videos ./cypress/screenshots
-            'npm run test:parallel'
+            cd cypress
+            ls -la
+            npm run test:parallel
           parallelism: 2
