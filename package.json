@@ -7,7 +7,7 @@
     "test": "cypress open",
     "test:headless": "cypress run --headless --browser=chrome --spec cypress/e2e/magento/**.cy.ts",
     "test:magento": "cypress run --browser=chrome --spec cypress/e2e/magento/magento.cy.ts",
-    "test:parallel": "cypress run --record --parallel"
+    "test:parallel": "cypress run --record --key=65df9b38-35c4-4e29-9f1c-7799606b23f0 --parallel"
   },
   "repository": {
     "type": "git",

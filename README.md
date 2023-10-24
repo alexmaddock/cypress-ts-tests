@@ -49,7 +49,7 @@ See below how files are inherited into the POM model
 
 ## CI & Parallel Considerations
 
-The considerations for how to scale tests in CI, lies in the the test tool features and the test nners capabilities. The diagram shows and compares two test tools with two CI runners.
+The considerations for how to scale tests in CI, lies in the the test tool features and the test nners capabilities. The diagram shows and compares two test tools with two CI runners, namely Cypress and compares it to Testcafe. The reasons for which are outlined below and give context to how to scale tests.
 
 Cypress employs the use of Mocha as its test runner to leverage the inbuilt hooks and handling of it's core logic to execute and report on results. Testcafe as an example uses it's own inbuilt runner to handle its execution logic. These lead to different conclusions when it comes to testing. Refer to the diagram for the discussion.
 
@@ -77,22 +77,22 @@ Cypress employs the use of Mocha as its test runner to leverage the inbuilt hook
 
 ![CI-Pipeline](./resources/CI-Pipeline.png)
 
-### Answers To Questions
+## Answers To Questions
 PART 2: 
 
 Answer the following Questions by adding in your Response next to the word “Answer” in Bold: 
 
-S1: You have a suite of Cypress tests that take a considerable amount of time to run sequentially. The goal is to reduce the overall test execution time by leveraging parallel execution. 
+*S1: You have a suite of Cypress tests that take a considerable amount of time to run sequentially. The goal is to reduce the overall test execution time by leveraging parallel execution.* 
 
-What considerations would you keep in mind regarding test dependencies, resource allocation, and reporting? Answer: 
+*What considerations would you keep in mind regarding test dependencies, resource allocation, and reporting?* Answer: 
 
 It depends on the test runner in question. In terms of 
 
-How would you ensure the stability and reliability of the tests when running them in parallel? Answer:
+*How would you ensure the stability and reliability of the tests when running them in parallel?* Answer:
 
 **I tend to employ a number of tricks like awaiting for certain conditions to resolve before moving onto another action. Most test suites have good waiting mechanisms, but asserting that certain elements are visible first or clickable tends to avoid race conditons. You can also add in a slow down of test execution by say 5% or 10%, and this tends to maintain good test speed, while avoid race conditions.**
 
-S2: Take me through a Scenario that you have worked on before, where you have detected anti-patterns. Answer:
+*S2: Take me through a Scenario that you have worked on before, where you have detected anti-patterns.* Answer:
 
 **I once inherited a test suite that had hard coded wait statements among nearly every interaction on the page. This was a on a single laptop only, running locally and it took approximately 8 hours to complete and report back to the team.**
 
@@ -117,7 +117,7 @@ addToCart({verifyPage: true}) // forces assertion to first resolve
 ```
 
 
-Can you explain some anti-patterns you have come across in those codebases that you've worked on, and explain the techniques you have used to improve the codebase? Answer:
+*Can you explain some anti-patterns you have come across in those codebases that you've worked on, and explain the techniques you have used to improve the codebase?* Answer:
 
 **As mentioned above one of them involved the use of if-else statements. These were littered all throughout the test codebase. Improving this generally invovles:**
 
@@ -162,19 +162,19 @@ const apiClient = {
 **The above code when run in parallel through a test tool like Testcafe, will share that single state of **token**, and as one test updates that record, it will wipe the previous states token away, causing authentication errors on a network call.**
 
 
-What specific techniques or strategies would you employ to identify anti-patterns? Answer:
+*What specific techniques or strategies would you employ to identify anti-patterns?* Answer:
 
 **If doing code reviews I can generally see before a merge when an antipattern is emerging. If I'm not the funnel that stops code merges, then I would employ code scans potentially and have them check the number of wait statements employed, check perhaps conditional statements, although this can be harder, due to if-else being keywords in a language, rather than a test tools function that is uniquely named. Linters generally help with this.**
 
-Once you identified the anti-patterns, how did you prioritize and categorize them based on their impact on the Test Suite? Answer:
+*Once you identified the anti-patterns, how did you prioritize and categorize them based on their impact on the Test Suite?* Answer:
 
 **I don't have an answer for this sorry. I tend to keep them in the back of my mind and leave them be if they run fine. If they are detrimental to the test suite then they become the primary focus to fix before anything else gets done.**
 
-How would you go about refactoring or improving the tests to eliminate the identified anti-patterns? Answer:
+*How would you go about refactoring or improving the tests to eliminate the identified anti-patterns?* Answer:
 
 **I don't have a method for this, as the patterns have shown themselves differently in each jobs based on the tool in use. I tend to experiment and iterate, using the repl to display small samples of code patterns I'd like to achieve, based on the shape of data I would like, or some ideas I have. Unfortunately I don't have hard and fast rules around this**
 
-What steps would you take to make the tests more maintainable, independent, and reliable? Answer:
+*What steps would you take to make the tests more maintainable, independent, and reliable?* Answer:
 
 1. **Ensure promises / async is used to resolve before proceeding with next step**
 
@@ -192,27 +192,27 @@ What steps would you take to make the tests more maintainable, independent, and 
 
 8. **Avoid large scale e2e tests. Run then as smaller components and use API to handle test state creation to save on time like by creating records through click events.**
 
-How would you ensure that the refactored tests still provide adequate test coverage and effectively validate the application's functionality Answer:
+*How would you ensure that the refactored tests still provide adequate test coverage and effectively validate the application's functionality* Answer:
 
-**I found with a couple of quite large refactors I've done, that my tests actually provide the basis for me to check their effectiveness. My test forms part of a living documentation standard, constantly reflecting current system state. If the code changes I see very quickly that it has failed with broad coverage.
-This allows me to make miniscule changes and run broad sweeping tests, and know immediately if the current changes have caused failures, with the ability to compare to a previous run.**
+**I found with a couple of quite large refactors I've done, that my tests actually provide the basis for me to check their effectiveness. My test forms part of a living documentation standard, constantly reflecting current system state. If the code changes I see very quickly that it has failed with broad coverage.**
+**This allows me to make miniscule changes and run broad sweeping tests, and know immediately if the current changes have caused failures, with the ability to compare to a previous run.**
 
 **On a refactor I did at a previous company, I worked on using environment variables via CLI to determine if we pointed the test suite at QA or DEV environments to run. We saw no downtime with this refactor, as we had tests continually running in QA, and once we worked out how to map a single state environment variable naming convention into a nested object structure, it was a matter of running the update on my local branch, monitoring if failure rates increased, and then eventually put it into CI. It was actually matter of just 'turning it on'. This refactor, while quite invovled, ran very well and tests didn't fail except for a missing env variable. Everything else passed as previously.**
 
-Considering the team's productivity and efficiency, how would you balance the effort required for anti-pattern remediation with ongoing feature development and bug fixing? Answer: 
+*Considering the team's productivity and efficiency, how would you balance the effort required for anti-pattern remediation with ongoing feature development and bug fixing?* Answer: 
 
 **If the test system is built well, you can generally leave the current state running in CI and reporting, while you work on remediation.**
 
-**If the team is very small like only one or two members, I would generally get test coverage high enough first, then assign one member to continue with feature development, while I worked on refactoring / tackling bugs.
-If it is just myself, I would determine first the frequency of test failures, the percentage and then decide if I jumped into bug fixing first, or can safely build more features that provide test coverage - especially if the bugs are trivial, are known and are awaiting a dev fix.
-For refactors, again this is a case by case basis, based on the urgency of coverage vs improving something we need.**
+**If the team is very small like only one or two members, I would generally get test coverage high enough first, then assign one member to continue with feature development, while I worked on refactoring / tackling bugs.**
+**If it is just myself, I would determine first the frequency of test failures, the percentage and then decide if I jumped into bug fixing first, or can safely build more features that provide test coverage - especially if the bugs are trivial, are known and are awaiting a dev fix.**
+**For refactors, again this is a case by case basis, based on the urgency of coverage vs improving something we need.**
 
-S3: At Winning Group, you will be required to set up a Bamboo Instance with Infrastructure and Developer Team help to execute the Tests on a per Build Basis, using your Test Source Code Repo in Bitbucket.
+*S3: At Winning Group, you will be required to set up a Bamboo Instance with Infrastructure and Developer Team help to execute the Tests on a per Build Basis, using your Test Source Code Repo in Bitbucket.*
 
-Note: If your experience is mainly in other CICD solutions like GitLab, Jenkins, CircleCI, TeamCity
+*Note: If your experience is mainly in other CICD solutions like GitLab, Jenkins, CircleCI, TeamCity*
 
-How would you configure the Branch? Answer:
-** Please refer to diagram above for the different options I have listed to running tests in CI. The way they are configured is dependent on the test tool in use and how it reads files / tests in a queue to run.**
+*How would you configure the Branch?* Answer:
+**Please refer to diagram above for the different options I have listed to running tests in CI. The way they are configured is dependent on the test tool in use and how it reads files / tests in a queue to run.**
 
 **It depends on the resource allocation of the container provisioned for my branch. I've had Gitlab branches with quite large memory allocations, that allowed me to simply pass in a `--concurrency=x` or `--parallel=y` flag and let the test tool handle the relevant number of test instances / browsers I need.**
 
@@ -226,11 +226,11 @@ How would you configure the Branch? Answer:
 **If teams are more fluid and dynamic, or if the team is not mature enough for shift left, I would allow them to either kick off a master test branch to check their results, or ensure I create a tagged version they can kick off to run their pipelines.**
 
 
-What are the Steps needed to successfully execute the jobs on the CI/CD setup, and display the results? 
-Please focus your answer on running the Tests on a Scheduled Basis, and then on a Per Build Basis. Also, take us through Step By Step details on how you would configure your Job Plan (or similar), and what Triggers you would add (or similar). Answer:
+*What are the Steps needed to successfully execute the jobs on the CI/CD setup, and display the results?* 
+*Please focus your answer on running the Tests on a Scheduled Basis, and then on a Per Build Basis. Also, take us through Step By Step details on how you would configure your Job Plan (or similar), and what Triggers you would add (or similar).* Answer:
 
 **For a scheduled basis, generally a CRON job configuration in the yml file, or the CI runner UI.**
 
 **Per build basis, I'd link up dev pipelines and code repositories to reference my test suite and kick off from master. Or if they wanted a stable version, these can be created as tags; depending on how many teams are pushing code to an environment, this may be a bit harder due to the nature of constant updates and changes, that cause a tagged version to fall behind and fail.**
 
-Within the Configuration Plan/Pipeline (or similar), what kind of Tasks would you create? Answer:
+*Within the Configuration Plan/Pipeline (or similar), what kind of Tasks would you create?* Answer:
