@@ -233,4 +233,16 @@ const apiClient = {
 
 **Per build basis, I'd link up dev pipelines and code repositories to reference my test suite and kick off from master. Or if they wanted a stable version, these can be created as tags; depending on how many teams are pushing code to an environment, this may be a bit harder due to the nature of constant updates and changes, that cause a tagged version to fall behind and fail.**
 
+**Some of the steps involved for a successful execution generally involve a build step, which uses an image version you have specified and do a code checkout you have linked to your CI runner. From there you can run your test step and within this you can determine what size containers you would like, or leave as default.** 
+
+**Environment variables can also be defined and grabbed, but I personally like to have them manually stored in the CI runner variables and referenced from the test code. In the test job / pipeline stage you can run some additional commands like create artifacts dirs to send screenshots and videos to for debugging.**
+
+**Other tasks I generally include any scalable keywords if I'm using the runners scaling system, other just leave scaling to the test tool CLI prompt e.g. `--concurrency` or `--parallel`.** 
+
+**If additional commands like creating directories and installing xvfb can also be executed before the tests. The test command can then be called to run the test steps.** 
+
+**I would also generally add a retry step in the pipeline for any files / test cases specifically that didn't pass. From there artifacts and test reports can be generated and stored / sent to the relevant container addresses**
+
 *Within the Configuration Plan/Pipeline (or similar), what kind of Tasks would you create?* Answer:
+
+Please refer to the above answer and image within [CI & Parallel Considerations](https://github.com/alexmaddock/cypress-ts-tests#ci--parallel-considerations) of this README. The steps are highly dependent on what is needed and is being achieved. There can be times where install steps are required via `run` command, or these can be incorporated into a base image if such a source registry exists internal to the business.
