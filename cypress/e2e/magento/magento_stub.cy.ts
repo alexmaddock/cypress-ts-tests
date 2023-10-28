@@ -48,17 +48,20 @@ describe('Magento Tests', () => {
         accountPage.veryifyAccountDetails();
       });
 
-    it('WIP: auth session attempt stub', () => {
+    it.only('WIP: auth session attempt stub', () => {
         // Grab and store all sessions and tokens before login
-        cy.visit('/')
+        // https://kubajz.dev/cypress-authentication-route2
+        cy.visit('/');
         cy.getAllLocalStorage().then((storage) => {cy.writeFile('no_auth_localstorage.txt', storage)});
         cy.getAllCookies().then((cookies) => {cy.writeFile('no_auth_cookies.txt', cookies)})
         cy.getAllSessionStorage().then((sessionStorage) => {cy.writeFile('no_auth_session.txt', sessionStorage)});
 
+        homePage.clickLogin();
         loginPage.enterEmail();
         loginPage.enterPassword();
         loginPage.clickSignIn();
-        homePage.clickAccountDropdown({verifyDropdownElems: true});
+        cy.wait(3000).reload();
+        // homePage.clickAccountDropdown({verifyDropdownElems: true});
         cy.getAllLocalStorage().then((storage) => {cy.writeFile('auth_localstorage.txt', storage)});
         cy.getAllCookies().then((cookies) => {cy.writeFile('auth_cookies.txt', cookies)})
         cy.getAllSessionStorage().then((sessionStorage) => {cy.writeFile('auth_session.txt', sessionStorage)});
